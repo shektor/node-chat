@@ -9,6 +9,7 @@ const INDEX = path.join(__dirname, 'index.html');
 
 const server = express()
   .use(express.static('public'))
+  .use(express.static('src'))
   .use((req, res) => res.sendFile(INDEX))
   .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
@@ -19,8 +20,5 @@ wss.on('connection', (ws) => {
   ws.on('close', () => console.log('Client disconnected'));
 });
 
-setInterval(() => {
-  wss.clients.forEach((client) => {
-    client.send(new Date().toTimeString());
-  });
-}, 1000);
+const sendTime = require('./src/server/time.js');
+sendTime(wss.clients);
